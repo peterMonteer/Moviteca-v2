@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,8 @@ import com.example.android.popularmoviesstage1.db.FavoritesContract;
 import com.example.android.popularmoviesstage1.db.FavoritesDbHelper;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import static com.example.android.popularmoviesstage1.db.FavoritesContract.FavoritesEntry.CONTENT_URI;
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<MovieDetails> {
@@ -34,10 +38,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public static final String VIDEO_ENDPOINT = "videos";
     public static final String REVIEWS_ENDPOINT = "reviews";
     public static final String API_KEY = MainActivity.API_KEY;
-    public static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch";
+
     private Button trailerButton;
     private TextView reviewContentTextView;
     private CheckBox favoriteCheckBox;
+    private RecyclerView userReviewRecyclerView;
+    private RecyclerView trailerRecyclerView;
 
     //Movie variables
     private int id;
@@ -61,9 +67,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         TextView user_rating = findViewById(R.id.user_rating_content);
         TextView release_date = findViewById(R.id.release_date_content);
         TextView overview = findViewById(R.id.overview_content);
-        trailerButton = findViewById(R.id.watch_trailer_button);
-        reviewContentTextView = findViewById(R.id.user_review_content);
         favoriteCheckBox = findViewById(R.id.favorite_star);
+        userReviewRecyclerView = findViewById(R.id.user_reviews_rv);
+        trailerRecyclerView = findViewById(R.id.trailer_rv);
 
         id = currentMovie.getId();
         movieName = currentMovie.getOriginal_title();
@@ -76,6 +82,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         user_rating.setText(userRating);
         release_date.setText(releaseDate);
         overview.setText(overView);
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        userReviewRecyclerView.setLayoutManager(layoutManager);
+        trailerRecyclerView.setLayoutManager(layoutManager1);
+
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        userReviewRecyclerView.setHasFixedSize(true);
+        trailerRecyclerView.setHasFixedSize(true);
 
 
         Picasso.with(this).load("http://image.tmdb.org/t/p/w185/" + posterPath).into(poster_path);
@@ -131,21 +151,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     @Override
     public void onLoadFinished(Loader<MovieDetails> loader, MovieDetails movieDetails) {
-        String youtubeKey = movieDetails.getYoutubeKey();
-        Uri youtubeBaseUri = Uri.parse(YOUTUBE_BASE_URL);
-        final Uri.Builder youtubeUriBuilder = youtubeBaseUri.buildUpon();
-        youtubeUriBuilder.appendQueryParameter("v",youtubeKey);
-        reviewContentTextView.setText(movieDetails.getReviewContent());
+        ArrayList<String> youtubeKey = movieDetails.getYoutubeKeys();
+        trailerRecyclerView.setAdapter(new TrailerAdapter(youtubeKey));
 
-        trailerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("onClick","aqui");
-                Intent trailerIntent = new Intent(Intent.ACTION_VIEW);
-                trailerIntent.setData(youtubeUriBuilder.build());
-                startActivity(trailerIntent);
-            }
-        });
+        ArrayList<UserReviews> userReviewsArrayList = movieDetails.getUserReviews();
+        userReviewRecyclerView.setAdapter(new UserReviewsAdapter(userReviewsArrayList));
     }
 
     @Override

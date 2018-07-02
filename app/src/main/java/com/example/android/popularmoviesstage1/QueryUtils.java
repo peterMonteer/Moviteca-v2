@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pedro on 31/03/2018.
@@ -133,13 +134,17 @@ public final class QueryUtils {
         }
 
         MovieDetails movieDetails = new MovieDetails();
+        ArrayList<String> movieTrailersKey = new ArrayList<>();
+        ArrayList<UserReviews> movieReviews = new ArrayList<>();
 
         try {
             JSONObject reader = new JSONObject(trailerJsonResponse);
             JSONArray results = reader.getJSONArray("results");
-            JSONObject currentResult = results.getJSONObject(0);
-            String trailerKey = currentResult.getString("key");
-            movieDetails.setYoutubeKey(trailerKey);
+            for ( int i = 0 ; i < results.length() ; i++ ) {
+                JSONObject currentResult = results.getJSONObject(i);
+                movieTrailersKey.add(currentResult.getString("key"));
+            }
+            movieDetails.setYoutubeKeys(movieTrailersKey);
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the JSON results", e);
         }
@@ -150,12 +155,14 @@ public final class QueryUtils {
         try {
             JSONObject reader = new JSONObject(reviewJsonResponse);
             JSONArray results = reader.getJSONArray("results");
-            JSONObject currentResult = results.getJSONObject(0);
-            String author = currentResult.getString("author");
-            String content = currentResult.getString("content");
-
-            movieDetails.setReviewAuthor(author);
-            movieDetails.setReviewContent(content);
+            for ( int i = 0 ; i < results.length() ; i++ ) {
+                JSONObject currentResult = results.getJSONObject(i);
+                String author = currentResult.getString("author");
+                String content = currentResult.getString("content");
+                UserReviews userReviews = new UserReviews(author,content);
+                movieReviews.add(userReviews);
+            }
+            movieDetails.setUserReviews(movieReviews);
 
         } catch (JSONException e) {
             e.printStackTrace();

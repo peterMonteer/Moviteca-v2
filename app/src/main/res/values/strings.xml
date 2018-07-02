@@ -83,4 +83,5 @@
     <string name="trailer">Trailer</string>
     <string name="user_reviews">User Reviews</string>
     <string name="star">star</string>
+    <string name="author">Author:</string>
 </resources>

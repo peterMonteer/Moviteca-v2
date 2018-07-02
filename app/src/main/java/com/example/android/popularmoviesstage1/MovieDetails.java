@@ -1,38 +1,31 @@
 package com.example.android.popularmoviesstage1;
 
+import java.util.ArrayList;
+
 /**
  * Created by pedro on 29/06/2018.
  */
 
 public class MovieDetails {
 
-    private String youtubeKey;
-    private String reviewAuthor;
-    private String reviewContent;
+    private ArrayList<String> youtubeKeys;
+    private ArrayList<UserReviews> userReviews;
 
     public MovieDetails(){
     }
 
-    public void setYoutubeKey(String youtubeKey){
-        this.youtubeKey = youtubeKey;
+    public void setYoutubeKeys(ArrayList<String> youtubeKeys){
+        this.youtubeKeys = youtubeKeys;
     }
-    public String getYoutubeKey(){
-        return youtubeKey;
-    }
-
-    public String getReviewAuthor() {
-        return reviewAuthor;
+    public ArrayList<String> getYoutubeKeys(){
+        return youtubeKeys;
     }
 
-    public void setReviewAuthor(String reviewAuthor) {
-        this.reviewAuthor = reviewAuthor;
+    public ArrayList<UserReviews> getUserReviews() {
+        return userReviews;
     }
 
-    public String getReviewContent() {
-        return reviewContent;
-    }
-
-    public void setReviewContent(String reviewContent) {
-        this.reviewContent = reviewContent;
+    public void setUserReviews(ArrayList<UserReviews> userReviews) {
+        this.userReviews = userReviews;
     }
 }

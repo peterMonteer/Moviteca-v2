@@ -183,13 +183,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             boolean isConnected = activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
             if (isConnected) {
-                getLoaderManager().initLoader(1, null, movieListLoaderListener);
+                getLoaderManager().restartLoader(1, null, movieListLoaderListener);
             }
         } else {
             Log.d("displayFavoritecall", displayBy);
-            getLoaderManager().initLoader(2,null,favoriteDatabaseLoaderListener);
+            getLoaderManager().restartLoader(2,null,favoriteDatabaseLoaderListener);
         }
     }
+
 
     @Override
     protected void onDestroy() {

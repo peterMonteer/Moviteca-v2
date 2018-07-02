@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         tools:context=".MovieDetailsActivity"
+        android:descendantFocusability="blocksDescendants"
         >
 
 
@@ -54,16 +55,12 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center_horizontal|center_vertical">
-                <Button
-                    android:id="@+id/watch_trailer_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/trailer"
-                    android:textSize="12sp"
-                    android:drawablePadding="10dp"
-                    android:drawableTint="@android:color/holo_red_dark"
-                    android:drawableEnd="@drawable/play_movie"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/trailer_rv"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
                     />
 
                 <TextView
@@ -79,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:padding="0dp"
                     android:visibility="visible"
-                    android:layout_marginTop="10dp"
                     android:contentDescription="@string/star"
                     style="?android:attr/starStyle" />
             </LinearLayout>
@@ -156,11 +152,12 @@
             android:layout_marginTop="5dp"
             android:text="@string/user_reviews"
             android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/user_review_content"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_reviews_rv"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"/>
+            android:focusable="false"/>
 
     </LinearLayout>
 </ScrollView>
